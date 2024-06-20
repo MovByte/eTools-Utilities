@@ -1,0 +1,58 @@
+#! @see - https://github.com/gorhill/uBlock/wiki/Static-filter-syntax
+
+#! Donation reminder banner
+www.etools.ch###etools_header
+
+#! Unknown
+www.etools.ch##form > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(2) > table > tbody > tr > td:nth-of-type(2)
+
+#! Advertisements
+www.etools.ch##.small.light
+www.etools.ch###etools_content_4
+www.etools.ch###etools_content_3
+www.etools.ch###etools_content_2
+www.etools.ch###etools_content_1
+
+#! Search Attributes bar (underneath the search bar)
+www.etools.ch##.searchAttributes
+
+#! Adblocker Message
+www.etools.ch##.msg
+
+#! Swiss Advertisements
+#! Powered by
+www.etools.ch##.light.poweredby
+www.etools.ch##[src*="images/logo-sms-140.png"]
+#! Enterprise advertisement
+www.etools.ch##[href*="https://www.comcepta.com/en/enterprise-metasearch.html"]
+
+#! Relevancy counter (useless)
+www.etools.ch##.count
+
+#! Right sidebar
+#! Advertisement page
+www.etools.ch##table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(2) > table > tbody > tr > td:nth-of-type(2)
+#! Help page (diabled for pro users)
+www.etools.ch##.date.help
+www.etools.ch##.subList
+
+#! Affiliate badge on search results
+www.etools.ch##.affiliate
+
+#! Locale changer
+www.etools.ch##.logo > .mt > [href*="/userLocale.do"]
+www.etools.ch###country
+
+#! Sponsored Links
+www.etools.ch##.sRecord
+www.etools.ch##.sResultStatus
+
+#! Advertisement marker
+www.etools.ch##h3:nth-of-type(-n+2)
+
+#! External Link Tool
+www.etools.ch##p.srec
+www.etools.ch##li.m0:nth-of-type(5)
+
+#! Further Results
+div.box:nth-of-type(6)

@@ -8,115 +8,130 @@
 @preprocessor stylus
 @homepageURL  https://userstyles.world/style/16879/etools-ch-modern-theme
 
+@var checkbox disableHighlight "Disable query highlighting" 1
 @var checkbox betterSearchBar "Better Search Bar" 1
-@var checkbox minimalBoxes "Minimal Boxes" 1
+@var checkbox minimalBoxes "Minimal boxes" 1
 @var checkbox braveSearchLinkColors "Brave Search Link Colors" 1
-@var checkbox modernFonts "Modern Fonts" 1
+@var checkbox modernFonts "Modern fonts" 1
+@var checkbox largerText "Larger text" 1
 ==/UserStyle== */
 /* https://github.com/openstyles/stylus/wiki/Writing-UserCSS */
 @-moz-document domain("www.etools.ch") {
-    if braveSearchLinkColors {
-        a.title:visited {
-            color: #7431dd;
-        }
-
-        a.title:link,
-        a.title:visited {
-            color: #1841d2;
-        }
+  /** You should enable highlight and enable this if you want to remove the highlighted queries because disabling highlights in preferences breaks the descriptions in mobile search. I have already reported this bug. */
+  if disableHighlight {
+    em {
+      background-color: #fff;
     }
-    a:link,
-    a:visited {
-        color: #62757e;
+  }
+
+  if braveSearchLinkColors {
+    a.title:visited {
+      color: #7431dd;
     }
 
-    /* Indent the description of the search results */
-    div.text,
-    div.attr {
-        padding-left: 10px;
+    a.title:link,
+    a.title:visited {
+      color: #1841d2;
     }
+  }
+  a:link,
+  a:visited {
+    color: #62757e;
+  }
 
-    /* Fix the misalignment from the result status to the right sidebar */
-    p.resultStatus {
-        padding-top: 0px;
+  /* Indent the description of the search results */
+  div.text,
+  div.attr {
+    padding-left: 10px;
+  }
+
+  /* Fix the misalignment from the result status to the right sidebar */
+  p.resultStatus {
+    padding-top: 0px;
+  }
+  /* Fix misalignment of the menulist on the left sidebar */
+  li.m0 {
+    margin-top: 0px;
+  }
+
+  if minimalBoxes {
+    td.menuArea {
+      background-color: #fff;
     }
-    /* Fix misalignment of the menulist on the left sidebar */
-    li.m0 {
-        margin-top: 0px;
+    ul.menuList {
+      background-color: #69c;
     }
+  }
 
-    if minimalBoxes {
-        td.menuArea {
-            background-color: #fff;
-        }
-        ul.menuList {
-            background-color: #69C;
-        }
+  if betterSearchBar {
+    .searchInput {
+      text-align: center;
+      border-spacing: 29px;
+      box-sizing: border-box;
     }
-
-
-    if betterSearchBar {
-        .searchInput {
-            text-align: center;
-            border-spacing: 29px;
-            box-sizing: border-box;
-        }
-        input {
-            min-height: 38px;
-        }
-        input.query {
-            width: 50em;
-        }
-        input.submit {
-            font-weight: bold
-        }
+    input {
+      min-height: 38px;
     }
-
-    if modernFonts {
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-
-        /* Global default font */
-        body {
-            font-family: "Open Sans", sans-serif;
-            font-optical-sizing: auto;
-            font-style: normal;
-            font-size: 1rem;
-        }
-        /* Search bar */
-        input.query,
-        input.submit {
-            font-size: 16px;
-            font-family: "Roboto", sans-serif;
-            font-weight: 400;
-            font-style: normal;
-        }
-        /* Search results */
-        table.result {
-            font-size: .8rem;
-        }
-        /* Search Results - titles */
-        a.title {
-            font-size: 16px;
-            font-family: "Roboto", sans-serif;
-            font-weight: 700;
-            font-style: normal;
-        }
-        /* Sidebar (to the left) menu */
-        h3,
-        .menuList {
-            font-family: "JetBrains Mono", monospace;
-            font-optical-sizing: auto;
-            font-style: normal;
-        }
-        /* Sidebar (to the right) menu boxes */
-        div.boxTop,
-        div.box {
-            font-size: 15px;
-        }
-        /* Sidebar menu (to the right) - titles */
-        ul.menuList, h3 {
-            font-size: 1.2rem;
-        }
+    input.query {
+      width: 50em;
     }
+    input.submit {
+      font-weight: bold;
+    }
+  }
+
+  if modernFonts {
+    @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+    /* Global default font */
+    body {
+      font-family: "Open Sans", sans-serif;
+      font-optical-sizing: auto;
+      font-style: normal;
+      font-size: 1rem;
+    }
+    /* Search bar */
+    input.query,
+    input.submit {
+      font-size: 16px;
+      font-family: "Roboto", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
+    /* Search results */
+    table.result {
+      font-size: 1rem;
+      if (largerText) {
+        font-size: 1.2rem;
+      }
+    }
+    /* Search Results - titles */
+    a.title {
+      font-size: 1.2rem;
+      if (largerText) {
+        font-size: 1.4rem;
+      }
+      font-family: "Roboto", sans-serif;
+      font-weight: 700;
+      font-style: normal;
+    }
+    /* Sidebar (to the left) menu */
+    h3,
+    .menuList {
+      font-family: "JetBrains Mono", monospace;
+      font-optical-sizing: auto;
+      font-style: normal;
+    }
+    /* Sidebar (to the right) menu boxes */
+    div.boxTop,
+    div.box {
+      font-size: 15px;
+    }
+    /* Sidebar menu (to the right) - titles */
+    ul.menuList,
+    h3 {
+      font-size: 1.2rem;
+    }
+  }
 }

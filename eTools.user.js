@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        eTools QOL improvements
 // @namespace   Violentmonkey Scripts
-// @match       https://www.etools.ch/searchSubmit.do*
+// @match       https://www.etools.ch/*
 // @grant       none
 // @version     1.001
 // @author      Ryan Wilson
@@ -49,7 +49,7 @@ const config = {
 
 const usingMobile =
   location.pathname === "/mobileSearch.do" ||
-  location.pathname === "mobileSearchSubmit.do";
+  location.pathname === "/mobileSearchSubmit.do";
 const usingDesktop =
   location.pathname === "/search.do" ||
   location.pathname === "/searchSubmit.do";
@@ -136,84 +136,119 @@ if (usingDesktop) {
   // TODO: Add the "proxy preview" feature
   if (config.proxyPreview) {
     /*
-      [...document.getElementsByClassName("attr")].forEach(attr => {
-          [...attr.childNodes].forEach(child => {
-              if (child.nodeType === Node.TEXT_NODE) {
-                  const isPipe = child.textContent === pipeText;
-                  const isSource = child.textContent === "Source: ";
-                  if (config.faviSources && (isPipe || isSource))
-                    ...
-              }
-          });
-      })
-      */
+    [...document.getElementsByClassName("attr")].forEach(attr => {
+        [...attr.childNodes].forEach(child => {
+            if (child.nodeType === Node.TEXT_NODE) {
+                const isPipe = child.textContent === pipeText;
+                const isSource = child.textContent === "Source: ";
+                if (config.faviSources && (isPipe || isSource))
+                  ...
+            }
+        });
+    })
+    */
   }
 }
 
-const affiliateRedirect = "https://www.etools.ch/redirect.do?a=";
-if (config.displayFullLink || config.removeAffiliateLink) {
-  if (usingDesktop || usingMobile) {
-    const searchEntries = [
-      ...(usingDesktop
-        ? document.getElementsByClassName("record")
-        : document.getElementsByTagName("a")),
-    ];
-    for (const searchEntry of searchEntries) {
-      const children = [...searchEntry.children];
-      const titleElement = children.find(
-        (el) => el instanceof HTMLAnchorElement
-      );
-      if (config.removeAffiliateLink) {
-        if (titleElement.href.startsWith(affiliateRedirect))
-          titleElement.href = decodeURIComponent(
-            titleElement.href.split(affiliateRedirect).pop()
-          );
-      }
-      if (config.displayFullLink) {
-        const titleLink = titleElement.href;
-        if (titleLink) {
-          if (usingDesktop) {
-            const urlDiv = children.find((child) => child.className === "attr");
-            const attrChildren = [...urlDiv.children];
-            const displayLink = attrChildren[0];
-            displayLink.innerText = titleLink;
-          } else {
-            for (const child of children) {
-              if (child.tagName === "var") child.innerText = titleLink;
-            }
-          }
+function removeAffiliateLink(linkElement) {
+  if (linkElement.href.startsWith(affiliateRedirect))
+    linkElement.href = decodeURIComponent(
+      linkElement.href.split(affiliateRedirect).pop()
+    );
+}
+function desktopHandleRecord(record) {
+  const children = [...record.children];
+  const titleElement = children.find((el) => el instanceof HTMLAnchorElement);
+  if (config.removeAffiliateLink) removeAffiliateLink(titleElement);
+  if (config.displayFullLink) {
+    const titleLink = titleElement.href;
+    if (titleLink) {
+      const urlDiv = children.find((child) => child.className === "attr");
+      const attrChildren = [...urlDiv.children];
+      const displayLink = attrChildren[0];
+      displayLink.innerText = titleLink;
+    }
+  }
+}
+function mobileHandlePElement(pElement) {
+  const children = [...pElement.children];
+  const linkElement = children.find(
+    (child) => child instanceof HTMLAnchorElement
+  );
+  if (config.removeAffiliateLink) removeAffiliateLink(linkElement);
+  const varElement = children.find((child) => child.tagName === "VAR");
+  varElement.innerText = linkElement.href;
+}
+
+const recordObserver = new MutationObserver((mutations) => {
+  for (const mutation of mutations)
+    if (mutation.type === "childList")
+      for (const node of mutation.addedNodes) {
+        if (node.tagName === "TR") {
+          const children = [...node.children];
+          const record = children.find((child) => child.className === "record");
+          if (record) desktopHandleRecord(record);
         }
       }
-    }
+});
+// This is done to enchance support with Pagetual because it inserts elements from the next page and this update needs to be factored
+const pElementObserver = new MutationObserver((mutations) => {
+  for (const mutation of mutations)
+    if (mutation.type === "childList")
+      for (const node of mutation.addedNodes)
+        if (node instanceof HTMLParagraphElement) mobileHandlePElement(node);
+});
+
+const affiliateRedirect = "https://www.etools.ch/redirect.do?a=";
+if (config.displayFullLink || config.removeAffiliateLink) {
+  if (usingDesktop) {
+    const searchEntries = [...document.getElementsByClassName("record")];
+    for (const searchEntry of searchEntries) desktopHandleRecord(searchEntry);
+    recordObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  }
+  if (usingMobile) {
+    const pElements = [...document.getElementsByTagName("p")].filter((p) =>
+      /^(\d\.)/.test(p.getAttribute("title"))
+    );
+    for (const pElement of pElements) mobileHandlePElement(pElement);
+    pElementObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   }
 }
 
 if (config.autofill) {
   const searchBar = document.getElementById("query");
-  searchBar.autocomplete = "off";
-  const autofill = document.createElement("datalist");
-  autofill.id = "autofill";
-  searchBar.setAttribute("list", "autofill");
-  searchBar.insertAdjacentElement("afterend", autofill);
-  searchBar.addEventListener("input", (e) => {
-    if (config.autofill.service === "brave")
-      GM_fetch(
-        `https://search.brave.com/api/suggest?q=${e.target.value}&rich=false&source=web`,
-        {
-          method: "GET",
-        }
-      )
-        .then((resp) => resp.json())
-        .then((results) => {
-          const sgs = results[1];
-          // Clear previous suggestions
-          autofill.innerHTML = "";
-          // Add new suggestions
-          for (const sg of sgs) {
-            const option = document.createElement("option");
-            option.value = sg;
-            autofill.appendChild(option);
+  if (searchBar) {
+    searchBar.autocomplete = "off";
+    const autofill = document.createElement("datalist");
+    autofill.id = "autofill";
+    searchBar.setAttribute("list", "autofill");
+    searchBar.insertAdjacentElement("afterend", autofill);
+    searchBar.addEventListener("input", (e) => {
+      if (config.autofill.service === "brave")
+        GM_fetch(
+          `https://search.brave.com/api/suggest?q=${e.target.value}&rich=false&source=web`,
+          {
+            method: "GET",
           }
-        });
-  });
+        )
+          .then((resp) => resp.json())
+          .then((results) => {
+            const sgs = results[1];
+            // Clear previous suggestions
+            autofill.innerHTML = "";
+            // Add new suggestions
+            for (const sg of sgs) {
+              const option = document.createElement("option");
+              option.value = sg;
+              autofill.appendChild(option);
+            }
+          });
+    });
+  }
 }

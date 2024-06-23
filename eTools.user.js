@@ -32,6 +32,7 @@ const config = {
   /** Bring the "By Topic:" menu to the top of the right sidebar **/
   bringByTopicToTop: true,
   moveSearchStatusesToBottom: true,
+  removeAffiliateLink: true,
   displayFullLink: true,
   faviSources: false,
   showFavi: true, // Fetches the favicon from the sites in a bare proxy
@@ -135,21 +136,22 @@ if (usingDesktop) {
   // TODO: Add the "proxy preview" feature
   if (config.proxyPreview) {
     /*
-    [...document.getElementsByClassName("attr")].forEach(attr => {
-        [...attr.childNodes].forEach(child => {
-            if (child.nodeType === Node.TEXT_NODE) {
-                const isPipe = child.textContent === pipeText;
-                const isSource = child.textContent === "Source: ";
-                if (config.faviSources && (isPipe || isSource))
-                  ...
-            }
-        });
-    })
-    */
+      [...document.getElementsByClassName("attr")].forEach(attr => {
+          [...attr.childNodes].forEach(child => {
+              if (child.nodeType === Node.TEXT_NODE) {
+                  const isPipe = child.textContent === pipeText;
+                  const isSource = child.textContent === "Source: ";
+                  if (config.faviSources && (isPipe || isSource))
+                    ...
+              }
+          });
+      })
+      */
   }
 }
 
-if (config.displayFullLink) {
+const affiliateRedirect = "https://www.etools.ch/redirect.do?a=";
+if (config.displayFullLink || config.removeAffiliateLink) {
   if (usingDesktop || usingMobile) {
     const searchEntries = [
       ...(usingDesktop
@@ -158,15 +160,27 @@ if (config.displayFullLink) {
     ];
     for (const searchEntry of searchEntries) {
       const children = [...searchEntry.children];
-      const titleLink = children[0].href;
-      if (titleLink) {
-        if (usingDesktop) {
-          const attrChildren = [...children[2].children];
-          const displayLink = attrChildren[0];
-          displayLink.innerText = titleLink;
-        } else {
-          for (const child of children) {
-            if (child.tagName === "var") child.innerText = titleLink;
+      const titleElement = children.find(
+        (el) => el instanceof HTMLAnchorElement
+      );
+      if (config.removeAffiliateLink) {
+        if (titleElement.href.startsWith(affiliateRedirect))
+          titleElement.href = decodeURIComponent(
+            titleElement.href.split(affiliateRedirect).pop()
+          );
+      }
+      if (config.displayFullLink) {
+        const titleLink = titleElement.href;
+        if (titleLink) {
+          if (usingDesktop) {
+            const urlDiv = children.find((child) => child.className === "attr");
+            const attrChildren = [...urlDiv.children];
+            const displayLink = attrChildren[0];
+            displayLink.innerText = titleLink;
+          } else {
+            for (const child of children) {
+              if (child.tagName === "var") child.innerText = titleLink;
+            }
           }
         }
       }

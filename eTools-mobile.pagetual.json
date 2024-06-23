@@ -4,6 +4,8 @@
     "url": "^https?:\\/\\/www\\.etools\\.ch\\/(mobileSearch\\.do|mobileSearchSubmit\\.do)",
     "example": "https://www.etools.ch/mobileSearchSubmit.do?query=%s",
     "nextLink": "body > p.nav > a:nth-last-of-type(1)",
-    "pageElement": "body > p:nth-of-type(-n+8)"
+    "pageElement": "body > p:nth-of-type(-n+8)",
+    "exclude": "p.nav and p.foot",
+    "css": "p.nav, p.foot { display: none } "
   }
 ]

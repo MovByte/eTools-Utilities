@@ -103,19 +103,18 @@
   }
 
   if betterSearchBar {
-    .searchInput {
+    td.searchInput {
       text-align: center;
       border-spacing: 29px;
       box-sizing: border-box;
     }
-    input {
+    td.searchInput input.query {
+      width: 50em;
       min-height: 38px;
     }
-    input.query {
-      width: 50em;
-    }
-    input.submit {
+    td.searchInput input.submit {
       font-weight: bold;
+      min-height: 38px;
     }
   }
 

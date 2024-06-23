@@ -7,6 +7,7 @@
 @version      0.1.0
 @preprocessor stylus
 @homepageURL  https://userstyles.world/style/16879/etools-ch-modern-theme
+@updateURL    https://github.com/MovByte/eTools-Utilities/raw/main/eTools.user.css
 
 @var checkbox disableHighlight "Disable query highlighting" 1
 @var checkbox betterSearchBar "Better Search Bar" 1

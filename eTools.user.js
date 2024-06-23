@@ -15,7 +15,7 @@
 // @grant       GM.setValue
 // @grant       GM_xmlhttpRequest
 // @downloadURL https://update.greasyfork.org/scripts/498448/eTools%20QOL%20improvements.user.js
-// @updateURL https://update.greasyfork.org/scripts/498448/eTools%20QOL%20improvements.meta.js
+// @updateURL   https://github.com/MovByte/eTools-Utilities/raw/main/eTools.user.js
 // ==/UserScript==
 
 // TODO: Achieve better safety

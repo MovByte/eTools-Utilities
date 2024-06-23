@@ -57,7 +57,7 @@ www.etools.ch##.sRecord
 www.etools.ch##.sResultStatus
 www.etools.ch###adtop
 ! Mobile
-! TODO: Make this only work on mobile www.etools.ch##h3
+www.etools.ch##:matches-path(/^mobile/) h3
 www.etools.ch##.srec
 www.etools.ch##.hxowptonrd.idc0_343
 

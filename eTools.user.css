@@ -82,8 +82,16 @@
       font-style: normal;
     }
   }
+
+  /* Fix mobile search bar */
+  form p {
+    padding: 0px;
+  }
 }
-@-moz-document regexp("^((?!mobileSearch\.do|mobileSearchSubmit\.do).)*$") {
+
+/* The desktop version only */
+@-moz-document regexp("^https://www.etools.ch/((?!mobileSearch\.do|mobileSearchSubmit\.do).)*$")
+{
   /* Fix the misalignment from the result status to the right sidebar */
   p.resultStatus {
     padding-top: 0px;

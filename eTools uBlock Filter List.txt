@@ -27,8 +27,9 @@ www.etools.ch##[src*="images/logo-sms-140.png"]
 www.etools.ch##[href*="https://www.comcepta.com/en/enterprise-metasearch.html"]
 
 ! Donate Advert
-! www.etools.ch##h3:nth-of-type(3)
-www.etools.ch##div.boxs:nth-of-type(5)
+www.etools.ch##h3:nth-of-type(3)
+www.etools.ch##div.box:nth-of-type(7)
+
 ! Donation reminder banner
 www.etools.ch###etools_header
 www.etools.ch###adTop
@@ -57,7 +58,7 @@ www.etools.ch##.sRecord
 www.etools.ch##.sResultStatus
 www.etools.ch###adtop
 ! Mobile
-www.etools.ch##:matches-path(/^mobile/) h3
+www.etools.ch##:matches-path(/mobile) h3
 www.etools.ch##.srec
 www.etools.ch##.hxowptonrd.idc0_343
 

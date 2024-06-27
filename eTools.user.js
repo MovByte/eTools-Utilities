@@ -27,6 +27,7 @@
 // -  @see https://github.com/sizzlemctwizzle/GM_config/wiki/
 // TODO: Use proper JSDoc annotations on the config object for all the properties
 const config = {
+  yandexImageSearchBtn: true,
   removeHighlight: true,
   disableMobileLink: false,
   /** Bring the "By Topic:" menu to the top of the right sidebar **/
@@ -55,6 +56,21 @@ const usingDesktop =
   location.pathname === "/searchSubmit.do";
 
 if (usingDesktop) {
+  if (config.yandexImageSearchBtn) {
+    const searchBar = document.getElementsByClassName("query")[0];
+    const searchBtn = document.getElementsByClassName("submit")[0];
+    const imgSearchBtn = document.createElement("input");
+    imgSearchBtn.type = "submit";
+    imgSearchBtn.value = "Image Search";
+    imgSearchBtn.className = "submit";
+    imgSearchBtn.style.marginLeft = "5px";
+    imgSearchBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      location.href =
+        "https://yandex.com/images/search?text=" + searchBar.value;
+    });
+    searchBtn.after(imgSearchBtn);
+  }
   if (config.moveSearchStatusesToBottom) {
     const results = document.getElementsByClassName("result")[0];
     const resultsTable = results.parentNode;
@@ -63,7 +79,7 @@ if (usingDesktop) {
     ].filter((status) => resultsTable.contains(status));
     // Search statuses on eTools are optional so they might not exist
     if (statuses.length !== 0) {
-      statuses.at(-1).style["padding-bottom"] = "15px";
+      statuses.at(-1).style.paddingBottom = "15px";
       statuses.forEach((status) => {
         resultsTable.appendChild(status);
       });

@@ -28,6 +28,8 @@
 // TODO: Use proper JSDoc annotations on the config object for all the properties
 const config = {
   yandexImageSearchBtn: true,
+  /* TODO: Implement */
+  collapsableSidebar: true,
   removeHighlight: true,
   disableMobileLink: false,
   /** Bring the "By Topic:" menu to the top of the right sidebar **/

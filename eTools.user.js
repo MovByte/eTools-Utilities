@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://www.etools.ch/*
 // @grant       none
-// @version     1.001
+// @version     1.002
 // @author      Ryan Wilson
 // @license     AGPL-3.0-or-later
 // @description ...
